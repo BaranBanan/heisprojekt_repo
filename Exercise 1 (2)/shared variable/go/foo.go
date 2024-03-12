@@ -19,10 +19,13 @@ func decrementing() {
 }
 
 func main() {
-    // What does GOMAXPROCS do? What happens if you set it to 1?
+    // What does GOMAXPROCS do? What happens if you set it to 1? Set the amount of threads that can run go-routines simultanoiusly
     runtime.GOMAXPROCS(2)    
 	
-    // TODO: Spawn both functions as goroutines
+    // Spawn both functions as goroutines
+    go incrementing()
+    go decrementing()
+    
 	
     // We have no direct way to wait for the completion of a goroutine (without additional synchronization of some sort)
     // We will do it properly with channels soon. For now: Sleep.
