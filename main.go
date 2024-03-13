@@ -19,6 +19,7 @@ func producer(c chan int){
 }
 
 
+
 func consumer(c chan int){
 
     time.Sleep(1 * time.Second)
