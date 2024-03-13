@@ -83,7 +83,7 @@ Before attempting to do the exercise, it is recommended to have a look at the fo
 
 Remember from before where we had no good way of waiting for a goroutine to finish? Try sending a "finished"/"worker done" message from the workers back to main on a separate channel. If you use different channels for the two threads, you will have to use `select { /*case...*/ }` so that it doesn't matter what order they arrive in, but it is probably easier to have multiple senders on the same channel that is read twice by `main`. 
 
-*Hint: you can "receive and discard" data from a channel by just doing `<-channelName`.*
+*Hint: you can "receive and discard" data from a channel by just doing `<-channelName`.*1
 
 ---
 
