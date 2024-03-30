@@ -12,7 +12,9 @@ func producer(c chan int){
         fmt.Printf("[producer]: pushing %d\n", i)
         // TODO: push real value to buffer
         select {
-        case }
+        case c <- i:
+        }
+
         
     }
 
@@ -26,23 +28,22 @@ func consumer(c chan int){
     for {
         i := 0 //TODO: get real value from buffer
         select {
-        case i = <-c:}
-        
-        fmt.Printf("[consumer]: %d\n", i)
-        time.Sleep(50 * time.Millisecond)
-    }
+        case i = <-c:
+            fmt.Printf("[consumer]: %d\n", i)
+            time.Sleep(50 * time.Millisecond)}
+        }
     
 }
 
 
+
 func main(){
-    
-    // TODO: make a bounded buffer
-    buffer := make(chan int, 10)
+
+    buffer := make(chan int, 5)
+    fmt.Println("Buffer created")
 
     go producer(buffer)
     go consumer(buffer)
 
-    
-    select {}
+    time.Sleep(10000 * time.Millisecond)
 }

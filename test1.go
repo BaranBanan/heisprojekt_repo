@@ -1,39 +1,27 @@
 package main
 
-import (
-    "fmt"
-    
-)
+import "fmt"
+import "time"
 
 func main() {
-    i:=0
+	ch := make(chan int, 8)
+	ch <- 1
+	ch <- 2
+	count := 0
+	for{
+	select{
+	case ch <- 3:
+	case i:=<-ch:
+        fmt.Println(i)
+	default:
+	time.Sleep(100 * time.Millisecond)
+	}
+	count++
+	if count > 20 {
+		break
+	}
+	}
+	
+	time.Sleep(10000 * time.Millisecond)
 
-    // Create a channel to signal completion
-    done := make(chan bool)
-
-    // Spawn thread_1
-    go func() {
-        for j := 0; j < 1000000; j++ {
-            i++
-        }
-        done <- true
-    }()
-
-    // Spawn thread_2
-    go func() {
-        for j := 0; j < 1000000; j++ {
-            i--
-        }
-        done <- true
-    }()
-
-    // Wait for both goroutines to finish
-    <-done
-    <-done
-
-    // Print i
-    fmt.Println(i)
-    
-
-    
 }

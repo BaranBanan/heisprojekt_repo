@@ -11,6 +11,7 @@ func producer(/*TODO: parameters?*/){
         time.Sleep(100 * time.Millisecond)
         fmt.Printf("[producer]: pushing %d\n", i)
         // TODO: push real value to buffer
+        
     }
 
 }
