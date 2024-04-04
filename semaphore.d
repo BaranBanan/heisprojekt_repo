@@ -19,10 +19,10 @@ Semaphore:
 class Resource(T) {
     private {
         T               value;
-        Semaphore       mtx;
-        Semaphore[2]    sems;
-        int[2]          numWaiting;
-        bool            busy;
+        Semaphore       mtx; //outer mutex fro allocation and deallocation
+        Semaphore[2]    sems; //inner semaphores for high and low priority users
+        int[2]          numWaiting; //number of users waiting for each priority
+        bool            busy; //whether the resource is currently being used
     }
     
     this(){
@@ -33,11 +33,34 @@ class Resource(T) {
     }
     
     T allocate(int priority){
+        mtx.wait();
+        if(busy){
+            numWaiting[priority]++;
+            mtx.notify(); //release outer lock
+            
+            sems[priority].wait(); //wait for our turn
+
+            mtx.wait(); //reacquire outer lock, becouse now it is our turn
+            numWaiting[priority]--;
+        }
+        busy = true;
+        mtx.notify(); //release outer lock
         return value;
+    
     }
     
     void deallocate(T v){
-        value = v;
+        mtx.wait();
+        busy = false; //release the resource
+        if(numWaiting[1] > 0){
+            sems[1].notify(); //notify high priority users
+
+        } else if(numWaiting[0] > 0){
+            sems[0].notify(); //notify low priority users
+        }
+        //if no one is waiting, do nothing
+        mtx.notify();
+        value = v; //not sure what this does, but it was in the original code
     }
 }
 

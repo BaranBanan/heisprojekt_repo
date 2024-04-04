@@ -40,6 +40,10 @@ void allocate(int priority){
     busy = true;
     Signal(M);
 }
+mtx.notify(); //release the outer mutex
+            numWaiting[priority]++; //increment the number of waiting users
+            sems[priority].wait();  //wait for the inner semaphore
+            numWaiting[priority]--; //done waiting! decrement the number of waiting users
 
 void deallocate(){
     Wait(M);
